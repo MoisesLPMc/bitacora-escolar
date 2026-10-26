@@ -45,9 +45,12 @@ h4 {
 
 /* Encabezado destacado para Fotos/Pizarras */
 h5 {
-  color: #e06c75; /* Tono coral/naranja para captar la atención */
-  background-color: #2c2527; /* Fondo sutil rojizo para contrastar */
-  border-left: 3px solid #e06c75; /* Acento lateral */
+  color: #e06c75;
+  /* Tono coral/naranja para captar la atención */
+  background-color: #2c2527;
+  /* Fondo sutil rojizo para contrastar */
+  border-left: 3px solid #e06c75;
+  /* Acento lateral */
   display: inline-block;
   padding: 4px 8px;
   margin: 10px 0 5px 0;
@@ -81,4 +84,92 @@ li {
   margin-bottom: 15px;
   font-size: 0.9em;
   opacity: 0.8;
+}
+
+
+/* ==========================================
+   ESTILOS AUTOMÁTICOS (ÍNDICE Y COMPACTADO)
+   ========================================== */
+
+/* Ampliamos un poco el body y dejamos espacio a la izquierda para el menú */
+body {
+  max-width: 900px;
+  padding-left: 240px;
+}
+
+/* Oculta todo el contenido del artículo excepto el h2 cuando está compactado */
+article.clase.compactado>*:not(h2) {
+  display: none;
+}
+
+/* Diseño del título h2 para que parezca un botón */
+article.clase h2 {
+  cursor: pointer;
+  user-select: none;
+  background-color: #252526;
+  padding: 10px;
+  border-radius: 4px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+}
+
+article.clase h2:hover {
+  background-color: #2b2d30;
+  border-left: 4px solid #98c379;
+}
+
+/* Flechita indicadora */
+article.clase h2::after {
+  content: " ▼";
+  float: right;
+  font-size: 0.7em;
+  color: #666;
+}
+
+article.clase.compactado h2::after {
+  content: " ◀";
+}
+
+/* Diseño del menú lateral flotante */
+.indice-lateral {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 190px;
+  background-color: #252526;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 15px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.indice-lateral ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.indice-lateral a {
+  display: block;
+  padding: 5px 0;
+  color: #abb2bf;
+  font-size: 0.85em;
+  border-bottom: 1px solid #333;
+}
+
+.indice-lateral a:hover {
+  color: #98c379;
+}
+
+/* Para pantallas de celulares */
+@media (max-width: 800px) {
+  body {
+    padding-left: 15px;
+  }
+
+  .indice-lateral {
+    position: static;
+    width: auto;
+    margin-bottom: 20px;
+  }
 }

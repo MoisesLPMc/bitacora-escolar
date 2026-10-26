@@ -15,27 +15,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const h2 = art.querySelector('h2');
         if (!h2) return;
 
-        // Le asigna un ID automático a tu HTML para que el menú funcione
-        const id = 'clase-' + index;
+        // Asigna un ID automático si no tiene uno
+        const id = art.id || 'clase-' + index;
         art.id = id;
 
-        // Extrae el texto del H2 y crea un enlace en el menú lateral
+        // Extrae el texto del H2 y crea un enlace en el menú
         const textoFecha = h2.textContent.replace('📅 ', '');
         const li = document.createElement('li');
-        li.innerHTML = `<a href="#${id}">${textoFecha}</a>`;
+        const enlace = document.createElement('a');
+        enlace.href = `#${id}`;
+        enlace.textContent = textoFecha;
+        li.appendChild(enlace);
         ul.appendChild(li);
 
-        // Detecta el clic en el H2 para expandir o contraer
+        // Clic en el H2: Alterna entre expandir/colapsar
         h2.addEventListener('click', () => {
             art.classList.toggle('compactado');
         });
 
-        // Si haces clic en el menú lateral, despliega ese artículo automáticamente
-        li.querySelector('a').addEventListener('click', () => {
-            art.classList.remove('compactado');
+        // Clic en el Menú: Compacta TODOS y solo expande el seleccionado
+        enlace.addEventListener('click', () => {
+            articulos.forEach(a => a.classList.add('compactado')); // Oculta todos
+            art.classList.remove('compactado'); // Muestra solo este
         });
     });
 
-    // Coloca el menú lateral en tu página sin que tengas que escribirlo
+    // Coloca el menú lateral en el documento
     document.body.insertBefore(nav, document.body.firstChild);
 });

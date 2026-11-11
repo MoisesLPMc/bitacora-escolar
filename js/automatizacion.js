@@ -1,45 +1,65 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Crea la caja del menú lateral
+    const articulos = document.querySelectorAll('article.clase');
+    if (articulos.length === 0) return;
+
     const nav = document.createElement('nav');
     nav.className = 'indice-lateral';
-    nav.innerHTML = '<h4 style="margin-top:0; color:#e5c07b;">📅 Fechas</h4><ul></ul>';
+    nav.innerHTML = '<h4>📅 Fechas</h4><ul></ul>';
     const ul = nav.querySelector('ul');
 
-    // 2. Busca todos los artículos de tus clases
-    const articulos = document.querySelectorAll('article.clase');
+    const enlaces = [];
 
     articulos.forEach((art, index) => {
-        // Autocompacta todos los artículos al cargar la página
-        art.classList.add('compactado');
-
         const h2 = art.querySelector('h2');
         if (!h2) return;
 
-        // Asigna un ID automático si no tiene uno
         const id = art.id || 'clase-' + index;
         art.id = id;
 
-        // Extrae el texto del H2 y crea un enlace en el menú
-        const textoFecha = h2.textContent.replace('📅 ', '');
+        const textoFecha = h2.textContent.replace('📅 ', '').trim();
+
         const li = document.createElement('li');
         const enlace = document.createElement('a');
         enlace.href = `#${id}`;
         enlace.textContent = textoFecha;
+
         li.appendChild(enlace);
         ul.appendChild(li);
 
-        // Clic en el H2: Alterna entre expandir/colapsar
-        h2.addEventListener('click', () => {
-            art.classList.toggle('compactado');
-        });
+        enlaces.push({ enlace, art });
 
-        // Clic en el Menú: Compacta TODOS y solo expande el seleccionado
         enlace.addEventListener('click', () => {
-            articulos.forEach(a => a.classList.add('compactado')); // Oculta todos
-            art.classList.remove('compactado'); // Muestra solo este
+            enlaces.forEach(item => {
+                item.art.classList.remove('activo');
+                item.enlace.classList.remove('seleccionado');
+            });
+
+            art.classList.add('activo');
+            enlace.classList.add('seleccionado');
+
+            // ¡NUEVO! Le avisa al CSS que ahora debe mover el menú a la izquierda
+            document.body.classList.add('modo-lateral');
         });
     });
 
-    // Coloca el menú lateral en el documento
-    document.body.insertBefore(nav, document.body.firstChild);
+    const primerArticulo = articulos[0];
+    primerArticulo.parentNode.insertBefore(nav, primerArticulo);
+
+    const hash = window.location.hash;
+
+    if (hash) {
+        const elementoAActivar = enlaces.find(item => `#${item.art.id}` === hash);
+
+        if (elementoAActivar) {
+            elementoAActivar.art.classList.add('activo');
+            elementoAActivar.enlace.classList.add('seleccionado');
+
+            // ¡NUEVO! Como entraste directo a un artículo, mueve el menú a la izquierda de inmediato
+            document.body.classList.add('modo-lateral');
+
+            setTimeout(() => {
+                elementoAActivar.art.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    }
 });
